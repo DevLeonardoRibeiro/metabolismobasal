@@ -5,6 +5,7 @@ function calcular(event) {
   const altura = Number(document.getElementById('altura').value);
   const genero = seleciona('genero');
   const dados = calcTMB(peso, idade, altura, genero);
+  const imc = parseInt(calcIMC(peso, altura));
 
   document.getElementById('metabolismo_basal').innerHTML = Math.ceil(
     dados.basal
@@ -25,9 +26,30 @@ function calcular(event) {
   );
   document.getElementById('perder_peso').innerHTML = Math.ceil(
     dados.perderPeso
-  );
+    );
 
-  document.getElementById('result-data').style.visibility = 'visible';
+    let classificacao = ["Magreza", "Normal", "Sobrepeso", "Obesidade grau 1", "Obesidade grau 2", "Obesidade grau 3"];
+    
+    function classificaImc (imc) {
+      if (imc < 18.5) {
+        return classificacao[0];
+      } else if (imc >= 18.5 && imc <= 24.9){
+        return classificacao[1];
+      } else if (imc >= 25 && imc <= 29.9) {
+        return classificacao[2];
+      } else if (imc >= 30 && imc <= 34.9) {
+        return classificacao[3];
+      } else if (imc >= 35 && imc <= 39.9) {
+        return classificacao[4];
+      } else {
+        return classificacao[5];
+      }
+}
+
+document.getElementById('resultado__imc').innerHTML = `Seu IMC é de ${imc.toFixed(2)} e sua classificação é ${classificaImc(imc)}`;
+
+document.getElementById('result-data').style.visibility = 'visible';
+
 }
 
 //pega o genero se masculino ou feminino
@@ -59,9 +81,9 @@ function calcTMB(peso, idade, altura, genero) {
 function calcIMC(peso, altura) {
   if (peso <= 0 || altura <= 0) {
     return null;
-  }
-
+  } else {
   const alturaMetros = altura / 100;
-  const imc = peso / (alturaMetros * alturaMetros);
+  let imc = peso / (alturaMetros * alturaMetros);
   return imc.toFixed(2);
+  }
 }
